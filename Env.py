@@ -19,9 +19,8 @@ class CabDriver():
         self.state_space = [[x, y, z] for x in range(num_city) for y in range(num_hours) for z in range(num_days)] ##
         self.state_init = random.choice(self.state_space)
         self.reset()
-
-
-
+        self.d_loc = {0:2,1:12,2:4,3:7,4:8}
+        
     def state_encod_arch1(self, state):
         """convert the state into a vector so that it can be fed to the NN. This method converts a given state into a vector format. Hint: The vector is of size m + t + d."""
         state_encod = [0 for x in range (num_days+num_city+num_hours)]  
@@ -59,27 +58,14 @@ class CabDriver():
         """Determining the number of requests basis the location.
         Use the table specified in the MDP and complete for rest of the locations"""
         location = state[0]
-        if location == 0:
-            requests = np.random.poisson(2)
-        if location == 1:
-            requests = np.random.poisson(12)
-        if location == 2:
-            requests = np.random.poisson(4)
-        if location == 3:
-            requests = np.random.poisson(7)
-        if location == 4:
-            requests = np.random.poisson(8)
-
+        requests = np.random.poisson(self.d_loc[location])
         if requests >15:
             requests =15
 
         possible_actions_index = random.sample(range(1, (num_city-1)*num_city +1), requests) 
         actions = [self.action_space[i] for i in possible_actions_index]
 
-
         actions.append([0,0])
-
-        
 
         possible_actions_index.append(self.action_space.index((0,0)))
 
